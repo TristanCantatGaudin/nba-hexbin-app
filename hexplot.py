@@ -18,11 +18,15 @@ def seasons_of_player( playerId ):
 st.title('Mapping NBA shots')
 
 playerId = {
+'Rat Allen':'a/allenra02',
 'Kobe Bryant':'b/bryanko01',
 'Stephen Curry':'c/curryst01',
 'James Harden':'h/hardeja01',
 'Allen Iverson':'i/iversal01',
 'Michael Jordan':'j/jordami01',
+'Damian Lillard':'l/lillada01',
+'Karl Malone':'m/malonka01',
+'Reggie Miller':'m/millere01',
 'Dirk Nowitzki':'n/nowitdi01',
 "Shaquille O'Neal":'o/onealsh01',
 'Trae Young':'y/youngtr01',
@@ -45,9 +49,7 @@ else:
     st.warning('No player selected')
     urlShots = ''
     
-
-
-
+    
 # Checkboxes:
 left, right = st.columns(2)
 with left: 
@@ -148,6 +150,8 @@ def html_to_shot_table( html ):
 # get the html:
 from urllib.request import urlopen
 if 'http' in urlShots:
+	st.write('Data from:',urlShots)
+
 	html = urlopen(urlShots).read()
 	full_table = html_to_shot_table( html )
 	
