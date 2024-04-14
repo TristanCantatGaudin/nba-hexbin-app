@@ -3,22 +3,57 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle, Rectangle, Arc
 
-st.title('NBA hex shots')
+def seasons_of_player( playerId ):
+    df = pd.read_html('https://www.basketball-reference.com/players/%s.html' % (playerId) )
+    try:
+        seasons = df[0]['Season']
+        games_played = pd.to_numeric(df[0]['G'], errors='coerce') 
+    except:
+        seasons = df[1]['Season']
+        games_played = pd.to_numeric(df[1]['G'], errors='coerce')         
+    seasons_played = seasons[ games_played>0 ]
+    seasons_with_shots = [s for s in seasons_played if '-' in s and (int(s.split('-')[0])>=1996)]
+    return seasons_with_shots
 
-selected = st.selectbox('Select a player:', ['', 'James Harden', 'Michael Jordan', 'Victor Wembanyama'], format_func=lambda x: 'Select an option' if x == '' else x)
-playerId = {'James Harden':'h/hardeja01','Michael Jordan':'j/jordami01','Victor Wembanyama':'w/wembavi01'}
+st.title('Mapping NBA shots')
 
-season = st.selectbox('Year (e.g. 1998 for season 97-98):',[str(yyy) for yyy in range(1997,2025)])
+playerId = {
+'Kobe Bryant':'b/bryanko01',
+'Stephen Curry':'c/curryst01',
+'James Harden':'h/hardeja01',
+'Allen Iverson':'i/iversal01',
+'Michael Jordan':'j/jordami01',
+'Dirk Nowitzki':'n/nowitdi01',
+"Shaquille O'Neal":'o/onealsh01',
+'Trae Young':'y/youngtr01',
+'Victor Wembanyama':'w/wembavi01',
+}
+
+
+selected = st.selectbox('Select a player:', ['']+list(playerId.keys()), format_func=lambda x: '...' if x == '' else x)
+
 
 
 if selected:
     #st.success('Yay! 🎉')
-    urlShots = 'https://www.basketball-reference.com/players/%s/shooting/%s' % (playerId[selected],season)
+    seasons_with_shots = seasons_of_player( playerId[selected] )
+    season = st.selectbox('Season:',seasons_with_shots)
+    if season:
+        seasonYearEnd = str(int(season.split('-')[0]) + 1)
+        urlShots = 'https://www.basketball-reference.com/players/%s/shooting/%s' % (playerId[selected],seasonYearEnd)
 else:
     st.warning('No player selected')
     urlShots = ''
     
-# st.write(selected)
+
+
+
+# Checkboxes:
+left, right = st.columns(2)
+with left: 
+    draw_court_box = st.checkbox('Draw court',value=True)
+with right:
+    draw_title_box = st.checkbox('Add title',value=True)
 
 
 def draw_court(ax=None, color='black', lw=2, outer_lines=False):
@@ -153,9 +188,10 @@ if 'http' in urlShots:
 	# Replot:
 	plt.figure(figsize=(9,8.5),facecolor='#111111')
 	plt.subplot(111,facecolor='#111111')
-	draw_court(outer_lines=True, color="#777777")
-	plt.xlim(-251,251)
-	plt.ylim(-47,423)
+	if draw_court_box:
+	    draw_court(outer_lines=True, color="#777777")
+	plt.xlim(-252,252)
+	plt.ylim(-50,425)
 	plt.xticks([]); plt.yticks([])
 	plt.gca().set_facecolor('k')
 	hb = plt.hexbin(X, Y, gridsize=(40,20), cmap='cool',
@@ -175,9 +211,9 @@ if 'http' in urlShots:
 	        fcolors[iii] = [0.9, 0.9, 0.9, 1.]        
 	hb.set(array=None, facecolors=fcolors)
 	
-	plt.text(-230,390,selected,color='w',fontsize=20,fontweight='bold')
-	seasonLabel = str(int(season)-1)+' - '+season
-	plt.text(-230,360,seasonLabel,color='w',fontsize=18,fontweight='bold')
+	if draw_title_box:
+		plt.text(-230,390,selected,color='w',fontsize=20,fontweight='bold')
+		plt.text(-230,360,season,color='w',fontsize=18,fontweight='bold')
 	
 	
 	st.pyplot(plt.gcf())
