@@ -20,7 +20,7 @@ st.set_page_config(page_title='NBA shots', page_icon=":basketball:")
 st.sidebar.title('Mapping NBA shots')
 
 playerId = {
-'Rat Allen':'a/allenra02',
+'Ray Allen':'a/allenra02',
 'Kobe Bryant':'b/bryanko01',
 'Stephen Curry':'c/curryst01',
 'James Harden':'h/hardeja01',
