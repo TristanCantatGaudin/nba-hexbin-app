@@ -15,10 +15,12 @@ def seasons_of_player( playerId ):
     seasons_with_shots = [s for s in seasons_played if '-' in s and (int(s.split('-')[0])>=1996)]
     return seasons_with_shots
 
-st.title('Mapping NBA shots')
+st.set_page_config(page_title='NBA shots', page_icon=":basketball:")
+
+st.sidebar.title('Mapping NBA shots')
 
 playerId = {
-'Ray Allen':'a/allenra02',
+'Rat Allen':'a/allenra02',
 'Kobe Bryant':'b/bryanko01',
 'Stephen Curry':'c/curryst01',
 'James Harden':'h/hardeja01',
@@ -34,14 +36,14 @@ playerId = {
 }
 
 
-selected = st.selectbox('Select a player:', ['']+list(playerId.keys()), format_func=lambda x: '...' if x == '' else x)
+selected = st.sidebar.selectbox('Select a player:', ['']+list(playerId.keys()), format_func=lambda x: '...' if x == '' else x)
 
 
 
 if selected:
     #st.success('Yay! 🎉')
     seasons_with_shots = seasons_of_player( playerId[selected] )
-    season = st.selectbox('Season:',seasons_with_shots)
+    season = st.sidebar.selectbox('Season:',seasons_with_shots)
     if season:
         seasonYearEnd = str(int(season.split('-')[0]) + 1)
         urlShots = 'https://www.basketball-reference.com/players/%s/shooting/%s' % (playerId[selected],seasonYearEnd)
@@ -51,11 +53,11 @@ else:
     
     
 # Checkboxes:
-left, right = st.columns(2)
+left, right = st.sidebar.columns(2)
 with left: 
-    draw_court_box = st.checkbox('Draw court',value=True)
+    draw_court_box = st.sidebar.checkbox('Draw court',value=True)
 with right:
-    draw_title_box = st.checkbox('Add title',value=True)
+    draw_title_box = st.sidebar.checkbox('Add title',value=True)
 
 
 def draw_court(ax=None, color='black', lw=2, outer_lines=False):
