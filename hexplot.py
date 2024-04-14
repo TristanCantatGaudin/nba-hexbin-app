@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.patches import Circle, Rectangle, Arc
+import matplotlib.colors
 
 def seasons_of_player( playerId ):
     df = pd.read_html('https://www.basketball-reference.com/players/%s.html' % (playerId) )
@@ -54,6 +55,14 @@ else:
     
 # Checkboxes:
 left, right = st.sidebar.columns(2)
+
+# Range slider:
+valuesRange = st.sidebar.slider(
+    'Percentage limits for "bad" and "good" shots:',
+    0.0, 100.0, (10.0, 40.0))
+colorBAD = left.color_picker('bad', '#ff0000')
+colorGOOD = right.color_picker('good', '#97ff33')
+
 with left: 
     draw_court_box = st.sidebar.checkbox('Draw court',value=True)
 with right:
@@ -152,7 +161,6 @@ def html_to_shot_table( html ):
 # get the html:
 from urllib.request import urlopen
 if 'http' in urlShots:
-	st.write('Data from:',urlShots)
 
 	html = urlopen(urlShots).read()
 	full_table = html_to_shot_table( html )
@@ -209,10 +217,10 @@ if 'http' in urlShots:
 	# Now iterate over bins to change their colours:
 	fcolors = hb.get_facecolors()
 	for iii in range(len(fcolors)):
-	    if pctMade[iii] < 0.1:
-	        fcolors[iii] = [1., 0., 0., 1.]
-	    elif pctMade[iii] > 0.5:
-	        fcolors[iii] = [0.6, 1., 0.2, 1.]
+	    if pctMade[iii] < valuesRange[0]/100.:
+	        fcolors[iii] = list(matplotlib.colors.to_rgb(colorBAD))+[1] #[1., 0., 0., 1.]
+	    elif pctMade[iii] > valuesRange[1]/100.:
+	        fcolors[iii] = list(matplotlib.colors.to_rgb(colorGOOD))+[1] #[0.6, 1., 0.2, 1.]
 	    else:
 	        fcolors[iii] = [0.9, 0.9, 0.9, 1.]        
 	hb.set(array=None, facecolors=fcolors)
@@ -223,3 +231,4 @@ if 'http' in urlShots:
 	
 	
 	st.pyplot(plt.gcf())
+	st.write('Data from:',urlShots)
