@@ -18,7 +18,7 @@ def seasons_of_player( playerId ):
 st.title('Mapping NBA shots')
 
 playerId = {
-'Rat Allen':'a/allenra02',
+'Ray Allen':'a/allenra02',
 'Kobe Bryant':'b/bryanko01',
 'Stephen Curry':'c/curryst01',
 'James Harden':'h/hardeja01',
