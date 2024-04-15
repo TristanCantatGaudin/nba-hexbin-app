@@ -209,7 +209,7 @@ try:
     	plt.figure(figsize=(9,8.5),facecolor='#111111')
     	plt.subplot(111,facecolor='#111111')
     	if draw_court_box:
-    	    draw_court(outer_lines=True, color="#777777")
+    	    draw_court(outer_lines=True, color="#444444")
     	plt.xlim(-252,252)
     	plt.ylim(-50,425)
     	plt.xticks([]); plt.yticks([])
