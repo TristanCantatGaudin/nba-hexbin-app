@@ -20,24 +20,28 @@ st.set_page_config(page_title='NBA shots', page_icon=":basketball:")
 
 st.sidebar.title('Mapping NBA shots')
 
-playerId = {
-'Ray Allen':'a/allenra02',
-'Kobe Bryant':'b/bryanko01',
-'Stephen Curry':'c/curryst01',
-'James Harden':'h/hardeja01',
-'Allen Iverson':'i/iversal01',
-'Michael Jordan':'j/jordami01',
-'Damian Lillard':'l/lillada01',
-'Karl Malone':'m/malonka01',
-'Reggie Miller':'m/millere01',
-'Dirk Nowitzki':'n/nowitdi01',
-"Shaquille O'Neal":'o/onealsh01',
-'Trae Young':'y/youngtr01',
-'Victor Wembanyama':'w/wembavi01',
-}
+if False:
+    playerId = {
+    'Ray Allen':'a/allenra02',
+    'Kobe Bryant':'b/bryanko01',
+    'Stephen Curry':'c/curryst01',
+    'James Harden':'h/hardeja01',
+    'Allen Iverson':'i/iversal01',
+    'Michael Jordan':'j/jordami01',
+    'Damian Lillard':'l/lillada01',
+    'Karl Malone':'m/malonka01',
+    'Reggie Miller':'m/millere01',
+    'Dirk Nowitzki':'n/nowitdi01',
+    "Shaquille O'Neal":'o/onealsh01',
+    'Trae Young':'y/youngtr01',
+    'Victor Wembanyama':'w/wembavi01',
+    }
+else:
+    import json
+    playerId = json.load(open("all_player_names.txt"))
 
 
-selected = st.sidebar.selectbox('Select a player:', ['']+list(playerId.keys()), format_func=lambda x: '...' if x == '' else x)
+selected = st.sidebar.selectbox('Select or type a player name:', ['']+list(playerId.keys()), format_func=lambda x: '...' if x == '' else x)
 
 
 
@@ -160,75 +164,80 @@ def html_to_shot_table( html ):
 
 # get the html:
 from urllib.request import urlopen
-if 'http' in urlShots:
 
-	html = urlopen(urlShots).read()
-	full_table = html_to_shot_table( html )
-	
-	import pandas as pd
-	df = pd.DataFrame(full_table,
-	                  columns='top,left,game,clock,description,score,made'.split(','))
-	X = -1*df['left'] + 240
-	Y = df['top'] - 45
-	
-	hbMade = plt.hexbin(X[ df['made']==1 ], Y[ df['made']==1 ], gridsize=(40,20), cmap='cool',
-	               extent=(-250,250,-50,420) )
-	hbMissed = plt.hexbin(X[ df['made']==0 ], Y[ df['made']==0 ], gridsize=(40,20), cmap='cool',
-	               extent=(-250,250,-50,420) )
-	
-	plt.clf() # to flush the two plots we just made: we only wanted to catch the output
-	pctMade = hbMade.get_array() / (hbMade.get_array() + hbMissed.get_array())
-	
-	# Now convert these numbers to colours:
-	import numpy as np
-	pctMade[ np.isnan(pctMade) ] = 0
-	
-	plt.figure(figsize=(9,8.5))
-	plt.subplot(111,facecolor='k')
-	draw_court(outer_lines=True, color="#777777")
-	plt.xlim(-251,251)
-	plt.ylim(-47,423)
-	plt.gca().set_facecolor('k')
-	hb = plt.hexbin(X, Y, gridsize=(40,20), cmap='turbo',
-	               extent=(-250,250,-50,420))
-	total_count = hb.get_array()
-	# convert the number to size:
-	new_size = 0.005*total_count
-	new_size[ new_size>0.1 ] = 0.1
-	plt.clf()
-	
-	
-	
-	# Replot:
-	plt.figure(figsize=(9,8.5),facecolor='#111111')
-	plt.subplot(111,facecolor='#111111')
-	if draw_court_box:
-	    draw_court(outer_lines=True, color="#777777")
-	plt.xlim(-252,252)
-	plt.ylim(-50,425)
-	plt.xticks([]); plt.yticks([])
-	plt.gca().set_facecolor('k')
-	hb = plt.hexbin(X, Y, gridsize=(40,20), cmap='cool',
-	               extent=(-250,250,-50,420),
-	               sizes=new_size)
-	
-	ax = plt.gca()
-	ax.figure.canvas.draw()
-	# Now iterate over bins to change their colours:
-	fcolors = hb.get_facecolors()
-	for iii in range(len(fcolors)):
-	    if pctMade[iii] < valuesRange[0]/100.:
-	        fcolors[iii] = list(matplotlib.colors.to_rgb(colorBAD))+[1] #[1., 0., 0., 1.]
-	    elif pctMade[iii] > valuesRange[1]/100.:
-	        fcolors[iii] = list(matplotlib.colors.to_rgb(colorGOOD))+[1] #[0.6, 1., 0.2, 1.]
-	    else:
-	        fcolors[iii] = [0.9, 0.9, 0.9, 1.]        
-	hb.set(array=None, facecolors=fcolors)
-	
-	if draw_title_box:
-		plt.text(-230,390,selected,color='w',fontsize=20,fontweight='bold')
-		plt.text(-230,360,season,color='w',fontsize=18,fontweight='bold')
-	
-	
-	st.pyplot(plt.gcf())
-	st.write('Data from:',urlShots)
+try:
+    if 'http' in urlShots:
+    
+    	html = urlopen(urlShots).read()
+    	full_table = html_to_shot_table( html )
+    	
+    	import pandas as pd
+    	df = pd.DataFrame(full_table,
+    	                  columns='top,left,game,clock,description,score,made'.split(','))
+    	X = -1*df['left'] + 240
+    	Y = df['top'] - 45
+    	
+    	hbMade = plt.hexbin(X[ df['made']==1 ], Y[ df['made']==1 ], gridsize=(40,20), cmap='cool',
+    	               extent=(-250,250,-50,420) )
+    	hbMissed = plt.hexbin(X[ df['made']==0 ], Y[ df['made']==0 ], gridsize=(40,20), cmap='cool',
+    	               extent=(-250,250,-50,420) )
+    	
+    	plt.clf() # to flush the two plots we just made: we only wanted to catch the output
+    	pctMade = hbMade.get_array() / (hbMade.get_array() + hbMissed.get_array())
+    	
+    	# Now convert these numbers to colours:
+    	import numpy as np
+    	pctMade[ np.isnan(pctMade) ] = 0
+    	
+    	plt.figure(figsize=(9,8.5))
+    	plt.subplot(111,facecolor='k')
+    	draw_court(outer_lines=True, color="#777777")
+    	plt.xlim(-251,251)
+    	plt.ylim(-47,423)
+    	plt.gca().set_facecolor('k')
+    	hb = plt.hexbin(X, Y, gridsize=(40,20), cmap='turbo',
+    	               extent=(-250,250,-50,420))
+    	total_count = hb.get_array()
+    	# convert the number to size:
+    	new_size = 0.005*total_count
+    	new_size[ new_size>0.1 ] = 0.1
+    	plt.clf()
+    	
+    	
+    	
+    	# Replot:
+    	plt.figure(figsize=(9,8.5),facecolor='#111111')
+    	plt.subplot(111,facecolor='#111111')
+    	if draw_court_box:
+    	    draw_court(outer_lines=True, color="#777777")
+    	plt.xlim(-252,252)
+    	plt.ylim(-50,425)
+    	plt.xticks([]); plt.yticks([])
+    	plt.gca().set_facecolor('k')
+    	hb = plt.hexbin(X, Y, gridsize=(40,20), cmap='cool',
+    	               extent=(-250,250,-50,420),
+    	               sizes=new_size)
+    	
+    	ax = plt.gca()
+    	ax.figure.canvas.draw()
+    	# Now iterate over bins to change their colours:
+    	fcolors = hb.get_facecolors()
+    	for iii in range(len(fcolors)):
+    	    if pctMade[iii] < valuesRange[0]/100.:
+    	        fcolors[iii] = list(matplotlib.colors.to_rgb(colorBAD))+[1] #[1., 0., 0., 1.]
+    	    elif pctMade[iii] > valuesRange[1]/100.:
+    	        fcolors[iii] = list(matplotlib.colors.to_rgb(colorGOOD))+[1] #[0.6, 1., 0.2, 1.]
+    	    else:
+    	        fcolors[iii] = [0.9, 0.9, 0.9, 1.]        
+    	hb.set(array=None, facecolors=fcolors)
+    	
+    	if draw_title_box:
+    		plt.text(-230,390,selected,color='w',fontsize=20,fontweight='bold')
+    		plt.text(-230,360,season,color='w',fontsize=18,fontweight='bold')
+    	
+    	
+    	st.pyplot(plt.gcf())
+    	st.write('Data from:',urlShots)
+except:
+    st.warning(f'It looks like there is no available shot data for {selected}. Detailed shot locations are typically not available before the 1996-97 season.')
+    st.write(f'You can check his stats at:\nhttps://www.basketball-reference.com/players/{playerId[selected]}.html')
