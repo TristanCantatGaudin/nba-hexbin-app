@@ -191,7 +191,7 @@ try:
     	
     	plt.figure(figsize=(9,8.5))
     	plt.subplot(111,facecolor='k')
-    	draw_court(outer_lines=True, color="#777777")
+    	draw_court(outer_lines=True, color="#444444")
     	plt.xlim(-251,251)
     	plt.ylim(-47,423)
     	plt.gca().set_facecolor('k')
