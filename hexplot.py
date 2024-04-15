@@ -63,7 +63,7 @@ left, right = st.sidebar.columns(2)
 # Range slider:
 valuesRange = st.sidebar.slider(
     'Percentage limits for "bad" and "good" shots:',
-    0.0, 100.0, (10.0, 40.0))
+    0.0, 100.0, (10.0, 50.0))
 colorBAD = left.color_picker('bad', '#ff0000')
 colorGOOD = right.color_picker('good', '#97ff33')
 
