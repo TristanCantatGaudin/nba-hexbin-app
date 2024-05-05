@@ -5,3 +5,5 @@
 * **Data source:** [Basketball-reference.com](https://www.basketball-reference.com/)
 
 <img src="nba_hexplot_app_screenshot.png" style="width: 80%; height: 80%"/>
+
+Also deployed on [Hugging Face](https://huggingface.co/spaces/TristanCantat/hexplot-nba)
