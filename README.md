@@ -3,3 +3,5 @@
 * Displays NBA player shooting charts per season.
 * **Python libraries:** matplotlib, pandas, streamlit
 * **Data source:** [Basketball-reference.com](https://www.basketball-reference.com/)
+
+![image](/nba_hexplot_app_screenshot.png)
