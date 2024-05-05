@@ -4,4 +4,4 @@
 * **Python libraries:** matplotlib, pandas, streamlit
 * **Data source:** [Basketball-reference.com](https://www.basketball-reference.com/)
 
-![image](/nba_hexplot_app_screenshot.png)
+<img src="nba_hexplot_app_screenshot.png" width=1500 height=970 />
