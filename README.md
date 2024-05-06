@@ -13,14 +13,14 @@ Also deployed on [Hugging Face](https://huggingface.co/spaces/TristanCantat/hexp
 
 Once the `Dockerfile` is written, build an image with:
 
-  docker build -t streamlit .
+    docker build -t streamlit .
 
 See it exists with:
 
-  docker images
+    docker images
 
 and run it with:
 
-  docker run -p 8501:8501 streamlit
+    docker run -p 8501:8501 streamlit
 
 Then browse to http://0.0.0.0:8501
