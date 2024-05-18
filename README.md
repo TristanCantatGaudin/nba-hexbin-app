@@ -1,5 +1,5 @@
 # nba-hexbin-app
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://hexplotpy-cuhjfjq4sph9zt3gi3jsmh.streamlit.app/)
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://nba-hexbin-app.streamlit.app/)
 
 Also deployed on [Hugging Face](https://huggingface.co/spaces/TristanCantat/hexplot-nba)
 
