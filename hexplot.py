@@ -6,12 +6,17 @@ import matplotlib.colors
 
 def seasons_of_player( playerId ):
     df = pd.read_html('https://www.basketball-reference.com/players/%s.html' % (playerId) )
+    # Try/except needed because bball ref layout can vary:
     try:
         seasons = df[0]['Season']
         games_played = pd.to_numeric(df[0]['G'], errors='coerce') 
     except:
-        seasons = df[1]['Season']
-        games_played = pd.to_numeric(df[1]['G'], errors='coerce')         
+        try:
+            seasons = df[1]['Season']
+            games_played = pd.to_numeric(df[1]['G'], errors='coerce') 
+        except:
+            seasons = df[2]['Season']
+            games_played = pd.to_numeric(df[2]['G'], errors='coerce')          
     seasons_played = seasons[ games_played>0 ]
     seasons_with_shots = [s for s in seasons_played if '-' in s and (int(s.split('-')[0])>=1996)]
     return seasons_with_shots
